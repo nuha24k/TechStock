@@ -1,0 +1,226 @@
+#include "techstock.h"
+
+void createListAkun(ListAkun &LA) {
+    LA.first = NULL;
+}
+
+adrAkun alokasiAkun(string user, string pass, string role, string nama) {
+    adrAkun P = new elmAkun;
+    P->info.username = user;
+    P->info.password = pass;
+    P->info.role = role;
+    P->info.nama = nama;
+    P->next = NULL;
+    return P;
+}
+
+void insertLastAkun(ListAkun &LA, adrAkun P) {
+    if (LA.first == NULL) {
+        LA.first = P;
+    } else {
+        adrAkun Q = LA.first;
+        while (Q->next != NULL) {
+            Q = Q->next;
+        }
+        Q->next = P;
+    }
+}
+
+adrAkun cariAkun(ListAkun LA, string user, string pass) {
+    adrAkun P = LA.first;
+    while (P != NULL) {
+        if (P->info.username == user && P->info.password == pass) {
+            return P;
+        }
+        P = P->next;
+    }
+    return NULL;
+}
+
+adrAkun cariUsername(ListAkun LA, string user) {
+    adrAkun P = LA.first;
+    while (P != NULL && P->info.username != user) {
+        P = P->next;
+    }
+    return P;
+}
+
+void printAkun(ListAkun LA) {
+    cout << "================================================" << endl;
+    cout << "USERNAME   | ROLE   | NAMA PENGGUNA" << endl;
+    cout << "================================================" << endl;
+    adrAkun P = LA.first;
+    while (P != NULL) {
+        cout << P->info.username << " | "
+             << P->info.role << " | "
+             << P->info.nama << endl;
+        P = P->next;
+    }
+    cout << "================================================" << endl;
+}
+
+void simpanAkun(ListAkun LA, string namaFile) {
+    ofstream fileOut(namaFile.c_str());
+    if (fileOut.is_open()) {
+        adrAkun P = LA.first;
+        while (P != NULL) {
+            fileOut << P->info.username << " "
+                    << P->info.password << " "
+                    << P->info.role << " "
+                    << P->info.nama << endl;
+            P = P->next;
+        }
+        fileOut.close();
+    }
+}
+
+void muatAkun(ListAkun &LA, string namaFile) {
+    ifstream fileIn(namaFile.c_str());
+    if (!fileIn.is_open()) {
+        insertLastAkun(LA, alokasiAkun("admin", "admin123", "ADMIN", "Ahlan_Admin"));
+        insertLastAkun(LA, alokasiAkun("kasir1", "kasir123", "KASIR", "Sofwan_Kasir"));
+        simpanAkun(LA, namaFile);
+        return;
+    }
+
+    string user, pass, role, nama;
+    while (fileIn >> user >> pass >> role >> nama) {
+        insertLastAkun(LA, alokasiAkun(user, pass, role, nama));
+    }
+    fileIn.close();
+}
+
+void createListProduk(ListProduk &LP) {
+    LP.first = NULL;
+    LP.last = NULL;
+}
+
+adrProduk alokasiProduk(infotypeProduk data) {
+    adrProduk P = new elmProduk;
+    P->info = data;
+    P->next = NULL;
+    P->prev = NULL;
+    return P;
+}
+
+void dealokasiProduk(adrProduk &P) {
+    delete P;
+    P = NULL;
+}
+
+bool isEmptyProduk(ListProduk LP) {
+    return LP.first == NULL && LP.last == NULL;
+}
+
+void insertLastProduk(ListProduk &LP, adrProduk P) {
+    if (isEmptyProduk(LP)) {
+        LP.first = P;
+        LP.last = P;
+    } else {
+        P->prev = LP.last;
+        LP.last->next = P;
+        LP.last = P;
+    }
+}
+
+void deleteLastProduk(ListProduk &LP, adrProduk &P) {
+    if (isEmptyProduk(LP)) {
+        P = NULL;
+    } else if (LP.first == LP.last) {
+        P = LP.last;
+        LP.first = NULL;
+        LP.last = NULL;
+    } else {
+        P = LP.last;
+        LP.last = LP.last->prev;
+        P->prev = NULL;
+        LP.last->next = NULL;
+    }
+}
+
+adrProduk cariProduk(ListProduk LP, string id) {
+    adrProduk P = LP.first;
+    while (P != NULL && P->info.idProduk != id) {
+        P = P->next;
+    }
+    return P;
+}
+
+void printProdukMaju(ListProduk LP) {
+    if (isEmptyProduk(LP)) {
+        cout << "Katalog produk masih kosong." << endl;
+    } else {
+        cout << "================================================================" << endl;
+        cout << "ID      | NAMA PRODUK          | KATEGORI    | HARGA    | STOK" << endl;
+        cout << "================================================================" << endl;
+        adrProduk P = LP.first;
+        while (P != NULL) {
+            cout << P->info.idProduk << " | "
+                 << P->info.namaProduk << " | "
+                 << P->info.kategori << " | Rp"
+                 << P->info.harga << " | "
+                 << P->info.stok << endl;
+            P = P->next;
+        }
+        cout << "================================================================" << endl;
+    }
+}
+
+void printProdukMundur(ListProduk LP) {
+    if (isEmptyProduk(LP)) {
+        cout << "Katalog produk masih kosong." << endl;
+    } else {
+        cout << "================================================================" << endl;
+        cout << "KATALOG PRODUK DARI INPUT TERBARU (MUNDUR: LAST KE FIRST)" << endl;
+        cout << "================================================================" << endl;
+        adrProduk P = LP.last;
+        while (P != NULL) {
+            cout << P->info.idProduk << " | "
+                 << P->info.namaProduk << " | "
+                 << P->info.kategori << " | Rp"
+                 << P->info.harga << " | Stok: "
+                 << P->info.stok << endl;
+            P = P->prev;
+        }
+        cout << "================================================================" << endl;
+    }
+}
+
+void simpanProduk(ListProduk LP, string namaFile) {
+    ofstream fileOut(namaFile.c_str());
+    if (fileOut.is_open()) {
+        adrProduk P = LP.first;
+        while (P != NULL) {
+            fileOut << P->info.idProduk << " "
+                    << P->info.namaProduk << " "
+                    << P->info.kategori << " "
+                    << P->info.harga << " "
+                    << P->info.stok << endl;
+            P = P->next;
+        }
+        fileOut.close();
+    }
+}
+
+void muatProduk(ListProduk &LP, string namaFile) {
+    ifstream fileIn(namaFile.c_str());
+    if (!fileIn.is_open()) {
+        infotypeProduk p1 = {"PRD-001", "Intel_Core_i5", "Processor", 3250000, 10};
+        infotypeProduk p2 = {"PRD-002", "ASUS_B760M", "Motherboard", 2450000, 6};
+        infotypeProduk p3 = {"PRD-003", "RAM_Kingston_16GB", "Memory", 950000, 20};
+        infotypeProduk p4 = {"PRD-004", "SSD_Samsung_1TB", "Storage", 1450000, 5};
+
+        insertLastProduk(LP, alokasiProduk(p1));
+        insertLastProduk(LP, alokasiProduk(p2));
+        insertLastProduk(LP, alokasiProduk(p3));
+        insertLastProduk(LP, alokasiProduk(p4));
+        simpanProduk(LP, namaFile);
+        return;
+    }
+
+    infotypeProduk d;
+    while (fileIn >> d.idProduk >> d.namaProduk >> d.kategori >> d.harga >> d.stok) {
+        insertLastProduk(LP, alokasiProduk(d));
+    }
+    fileIn.close();
+}

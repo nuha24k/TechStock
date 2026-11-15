@@ -1,0 +1,4 @@
+PRD-001 Intel_Core_i5 Processor 3250000 10
+PRD-002 ASUS_B760M Motherboard 2450000 6
+PRD-003 RAM_Kingston_16GB Memory 950000 20
+PRD-004 SSD_Samsung_1TB Storage 1450000 5
