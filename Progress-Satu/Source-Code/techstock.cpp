@@ -46,17 +46,35 @@ adrAkun cariUsername(ListAkun LA, string user) {
 }
 
 void printAkun(ListAkun LA) {
-    cout << "================================================" << endl;
-    cout << "USERNAME   | ROLE   | NAMA PENGGUNA" << endl;
-    cout << "================================================" << endl;
+    int wUser = 8;  // Panjang header "USERNAME"
+    int wRole = 4;  // Panjang header "ROLE"
+    int wNama = 13; // Panjang header "NAMA PENGGUNA"
+
     adrAkun P = LA.first;
     while (P != NULL) {
-        cout << P->info.username << " | "
-             << P->info.role << " | "
-             << P->info.nama << endl;
+        if ((int)P->info.username.length() > wUser) wUser = P->info.username.length();
+        if ((int)P->info.role.length() > wRole) wRole = P->info.role.length();
+        if ((int)P->info.nama.length() > wNama) wNama = P->info.nama.length();
         P = P->next;
     }
-    cout << "================================================" << endl;
+
+    int totalLebar = wUser + wRole + wNama + 6;
+    string garis(totalLebar, '=');
+
+    cout << garis << endl;
+    cout << left << setw(wUser) << "USERNAME" << " | "
+         << left << setw(wRole) << "ROLE" << " | "
+         << left << setw(wNama) << "NAMA PENGGUNA" << endl;
+    cout << garis << endl;
+
+    P = LA.first;
+    while (P != NULL) {
+        cout << left << setw(wUser) << P->info.username << " | "
+             << left << setw(wRole) << P->info.role << " | "
+             << left << setw(wNama) << P->info.nama << endl;
+        P = P->next;
+    }
+    cout << garis << endl;
 }
 
 void simpanAkun(ListAkun LA, string namaFile) {
@@ -150,19 +168,47 @@ void printProdukMaju(ListProduk LP) {
     if (isEmptyProduk(LP)) {
         cout << "Katalog produk masih kosong." << endl;
     } else {
-        cout << "================================================================" << endl;
-        cout << "ID      | NAMA PRODUK          | KATEGORI    | HARGA    | STOK" << endl;
-        cout << "================================================================" << endl;
+        int wId = 2;     // Panjang header "ID"
+        int wNama = 11;  // Panjang header "NAMA PRODUK"
+        int wKat = 8;    // Panjang header "KATEGORI"
+        int wHarga = 5;  // Panjang header "HARGA"
+        int wStok = 4;   // Panjang header "STOK"
+
         adrProduk P = LP.first;
         while (P != NULL) {
-            cout << P->info.idProduk << " | "
-                 << P->info.namaProduk << " | "
-                 << P->info.kategori << " | Rp"
-                 << P->info.harga << " | "
-                 << P->info.stok << endl;
+            string teksHarga = "Rp" + to_string(P->info.harga);
+            string teksStok = to_string(P->info.stok);
+
+            if ((int)P->info.idProduk.length() > wId) wId = P->info.idProduk.length();
+            if ((int)P->info.namaProduk.length() > wNama) wNama = P->info.namaProduk.length();
+            if ((int)P->info.kategori.length() > wKat) wKat = P->info.kategori.length();
+            if ((int)teksHarga.length() > wHarga) wHarga = teksHarga.length();
+            if ((int)teksStok.length() > wStok) wStok = teksStok.length();
             P = P->next;
         }
-        cout << "================================================================" << endl;
+
+        int totalLebar = wId + wNama + wKat + wHarga + wStok + 12;
+        string garis(totalLebar, '=');
+
+        cout << garis << endl;
+        cout << left << setw(wId) << "ID" << " | "
+             << left << setw(wNama) << "NAMA PRODUK" << " | "
+             << left << setw(wKat) << "KATEGORI" << " | "
+             << left << setw(wHarga) << "HARGA" << " | "
+             << left << setw(wStok) << "STOK" << endl;
+        cout << garis << endl;
+
+        P = LP.first;
+        while (P != NULL) {
+            string teksHarga = "Rp" + to_string(P->info.harga);
+            cout << left << setw(wId) << P->info.idProduk << " | "
+                 << left << setw(wNama) << P->info.namaProduk << " | "
+                 << left << setw(wKat) << P->info.kategori << " | "
+                 << left << setw(wHarga) << teksHarga << " | "
+                 << left << setw(wStok) << P->info.stok << endl;
+            P = P->next;
+        }
+        cout << garis << endl;
     }
 }
 
@@ -170,19 +216,51 @@ void printProdukMundur(ListProduk LP) {
     if (isEmptyProduk(LP)) {
         cout << "Katalog produk masih kosong." << endl;
     } else {
-        cout << "================================================================" << endl;
-        cout << "KATALOG PRODUK DARI INPUT TERBARU (MUNDUR: LAST KE FIRST)" << endl;
-        cout << "================================================================" << endl;
+        int wId = 2;     // Panjang header "ID"
+        int wNama = 11;  // Panjang header "NAMA PRODUK"
+        int wKat = 8;    // Panjang header "KATEGORI"
+        int wHarga = 5;  // Panjang header "HARGA"
+        int wStok = 4;   // Panjang header "STOK"
+
         adrProduk P = LP.last;
         while (P != NULL) {
-            cout << P->info.idProduk << " | "
-                 << P->info.namaProduk << " | "
-                 << P->info.kategori << " | Rp"
-                 << P->info.harga << " | Stok: "
-                 << P->info.stok << endl;
+            string teksHarga = "Rp" + to_string(P->info.harga);
+            string teksStok = to_string(P->info.stok);
+
+            if ((int)P->info.idProduk.length() > wId) wId = P->info.idProduk.length();
+            if ((int)P->info.namaProduk.length() > wNama) wNama = P->info.namaProduk.length();
+            if ((int)P->info.kategori.length() > wKat) wKat = P->info.kategori.length();
+            if ((int)teksHarga.length() > wHarga) wHarga = teksHarga.length();
+            if ((int)teksStok.length() > wStok) wStok = teksStok.length();
             P = P->prev;
         }
-        cout << "================================================================" << endl;
+
+        int totalLebar = wId + wNama + wKat + wHarga + wStok + 12;
+        string judul = "KATALOG PRODUK DARI INPUT TERBARU (MUNDUR: LAST KE FIRST)";
+        if ((int)judul.length() > totalLebar) totalLebar = judul.length();
+        string garis(totalLebar, '=');
+
+        cout << garis << endl;
+        cout << judul << endl;
+        cout << garis << endl;
+        cout << left << setw(wId) << "ID" << " | "
+             << left << setw(wNama) << "NAMA PRODUK" << " | "
+             << left << setw(wKat) << "KATEGORI" << " | "
+             << left << setw(wHarga) << "HARGA" << " | "
+             << left << setw(wStok) << "STOK" << endl;
+        cout << garis << endl;
+
+        P = LP.last;
+        while (P != NULL) {
+            string teksHarga = "Rp" + to_string(P->info.harga);
+            cout << left << setw(wId) << P->info.idProduk << " | "
+                 << left << setw(wNama) << P->info.namaProduk << " | "
+                 << left << setw(wKat) << P->info.kategori << " | "
+                 << left << setw(wHarga) << teksHarga << " | "
+                 << left << setw(wStok) << P->info.stok << endl;
+            P = P->prev;
+        }
+        cout << garis << endl;
     }
 }
 

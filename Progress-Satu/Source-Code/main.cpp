@@ -93,9 +93,16 @@ int main() {
                         cout << "Stok                             : ";
                         cin >> dataBaru.stok;
 
-                        insertLastProduk(katalogProduk, alokasiProduk(dataBaru));
-                        simpanProduk(katalogProduk, "Produk/produk.txt");
-                        cout << "Produk berhasil ditambahkan ke Produk/produk.txt!" << endl;
+                        if (cariProduk(katalogProduk, dataBaru.idProduk) != NULL) {
+                            cout << "ID produk sudah ada. Tidak boleh duplikat." << endl;
+                        } else {
+                            insertLastProduk(katalogProduk, alokasiProduk(dataBaru));
+                            simpanProduk(katalogProduk, "Produk/produk.txt");
+                            cout << "Produk berhasil ditambahkan!" << endl;
+                        }
+                        // insertLastProduk(katalogProduk, alokasiProduk(dataBaru));
+                        // simpanProduk(katalogProduk, "Produk/produk.txt");
+                        // cout << "Produk berhasil ditambahkan ke Produk/produk.txt!" << endl;
                     } else if (pilihMenu == 5 && akunAktif->info.role == "ADMIN") {
                         adrProduk P = NULL;
                         deleteLastProduk(katalogProduk, P);
@@ -121,6 +128,8 @@ int main() {
 
                         if (cariUsername(daftarAkun, user) != NULL) {
                             cout << "Username sudah ada. Tidak boleh duplikat" << endl;
+                        } else if (role != "ADMIN" && role != "KASIR") {
+                            cout << "Role ditolak! Penulisan role harus ADMIN atau KASIR (huruf kapital)." << endl;
                         } else {
                             insertLastAkun(daftarAkun, alokasiAkun(user, pass, role, nama));
                             simpanAkun(daftarAkun, "Akun/akun.txt");
